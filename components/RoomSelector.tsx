@@ -1,18 +1,24 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { Search } from 'lucide-react-native';
-import { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  Pressable,
+} from 'react-native'
+import { useState } from 'react'
 
 interface RoomSelectorProps {
-  rooms: string[];
-  selectedRoom: string;
+  rooms: string[]
+  selectedRoom: string
   selectorLayout: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
-  onSelectRoom: (room: string) => void;
-  onClose: () => void;
+    x: number
+    y: number
+    width: number
+    height: number
+  }
+  onSelectRoom: (room: string) => void
+  onClose: () => void
 }
 
 export function RoomSelector({
@@ -20,16 +26,19 @@ export function RoomSelector({
   selectedRoom,
   selectorLayout,
   onSelectRoom,
+  onClose,
 }: RoomSelectorProps) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState('')
 
   const filteredRooms = rooms.filter(room =>
-    room.toLowerCase().includes(query.toLowerCase())
-  );
+    room.toLowerCase().includes(query.toLowerCase()),
+  )
 
   return (
-    <View style={styles.container}>
-      <View
+    <Pressable style={styles.backdrop} onPress={onClose}>
+      {/* Prevent closing when tapping inside */}
+      <Pressable
+        onPress={() => {}}
         style={[
           styles.dropdown,
           {
@@ -41,10 +50,9 @@ export function RoomSelector({
       >
         {/* SEARCH */}
         <View style={styles.searchContainer}>
-          <Search size={16} color="#6B7280" />
           <TextInput
             placeholder="Find an item"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor="#737373"
             value={query}
             onChangeText={setQuery}
             style={styles.searchInput}
@@ -52,46 +60,41 @@ export function RoomSelector({
         </View>
 
         {/* ROOMS */}
-        {filteredRooms.map(room => (
-          <TouchableOpacity
-            key={room}
-            style={[
-              styles.roomItem,
-              room === selectedRoom && styles.roomItemSelected,
-            ]}
-            onPress={() => onSelectRoom(room)}
-            activeOpacity={0.7}
-          >
-            <Text
-              style={[
-                styles.roomText,
-                room === selectedRoom && styles.roomTextSelected,
-              ]}
+        {filteredRooms
+          .filter(room => room !== selectedRoom)
+          .map(room => (
+            <TouchableOpacity
+              key={room}
+              style={styles.roomItem}
+              onPress={() => {
+                onSelectRoom(room)
+                onClose()
+              }}
+              activeOpacity={0.7}
             >
-              {room}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </View>
-  );
+              <Text style={styles.roomText}>{room}</Text>
+            </TouchableOpacity>
+          ))}
+      </Pressable>
+    </Pressable>
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  backdrop: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
+    bottom: 0,
     zIndex: 1000,
   },
 
   dropdown: {
     position: 'absolute',
     backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 14,
-
+    borderRadius: 8,
+    padding: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.2,
@@ -100,40 +103,24 @@ const styles = StyleSheet.create({
   },
 
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderBottomWidth: 1,
+    borderColor: '#E6E6E6',
     marginBottom: 6,
-    gap: 8,
   },
 
   searchInput: {
-    flex: 1,
-    fontSize: 15,
+    fontSize: 16,
     color: '#111827',
+    paddingVertical: 6,
   },
 
   roomItem: {
     paddingVertical: 14,
     paddingHorizontal: 12,
-    borderRadius: 8,
-  },
-
-  roomItemSelected: {
-    backgroundColor: '#F3F4F6',
   },
 
   roomText: {
     fontSize: 16,
-    color: '#374151',
+    color: '#484848',
   },
-
-  roomTextSelected: {
-    color: '#111827',
-    fontWeight: '600',
-  },
-});
+})

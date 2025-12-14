@@ -7,20 +7,19 @@ import {
   ScrollView,
   Image,
   LayoutRectangle,
-} from 'react-native';
-import { useState } from 'react';
-import { ChevronDown } from 'lucide-react-native';
-import { DeviceCard } from '@/components/DeviceCard';
-import { RoomSelector } from '@/components/RoomSelector';
-import { Device } from '@/components/types/types';
+} from 'react-native'
+import { useState } from 'react'
+import { DeviceCard } from '@/components/DeviceCard'
+import { RoomSelector } from '@/components/RoomSelector'
+import { Device } from '@/components/types/types'
 
 export default function HomeScreen() {
-  const [selectedRoom, setSelectedRoom] = useState('Living Room');
-  const [showRoomSelector, setShowRoomSelector] = useState(false);
-  const [selectorLayout, setSelectorLayout] = useState<LayoutRectangle | null>(
-    null
-  );
-  const rooms = ['Living Room', 'Bed Room', 'Kids Room', 'Kitchen'];
+  const [selectedRoom, setSelectedRoom] = useState('Living Room')
+  const [showRoomSelector, setShowRoomSelector] = useState(false)
+  const [selectorLayout, setSelectorLayout] =
+    useState<LayoutRectangle | null>(null)
+
+  const rooms = ['Living Room', 'Bed Room', 'Kids Room', 'Kitchen']
 
   const [devices, setDevices] = useState<Device[]>([
     {
@@ -55,13 +54,13 @@ export default function HomeScreen() {
       isOn: false,
       type: 'lamp',
     },
-  ]);
+  ])
 
   const toggleDevice = (id: string) => {
-    setDevices((prev) =>
-      prev.map((d) => (d.id === id ? { ...d, isOn: !d.isOn } : d))
-    );
-  };
+    setDevices(prev =>
+      prev.map(d => (d.id === id ? { ...d, isOn: !d.isOn } : d)),
+    )
+  }
 
   return (
     <ImageBackground
@@ -81,12 +80,31 @@ export default function HomeScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.roomSelector}
-            onPress={() => setShowRoomSelector(!showRoomSelector)}
-            onLayout={(e) => setSelectorLayout(e.nativeEvent.layout)}
+            style={
+              showRoomSelector
+                ? styles.roomSelectorSelected
+                : styles.roomSelector
+            }
+            onPress={() => setShowRoomSelector(prev => !prev)}
+            onLayout={e => setSelectorLayout(e.nativeEvent.layout)}
+            activeOpacity={0.8}
           >
-            <Text style={styles.roomText}>{selectedRoom}</Text>
-            <ChevronDown size={18} color="#fff" />
+            <Text
+              style={
+                showRoomSelector ? styles.roomTextSelected : styles.roomText
+              }
+            >
+              {selectedRoom}
+            </Text>
+
+            <Image
+              source={
+                showRoomSelector
+                  ? require('@/assets/images/up/up.png')
+                  : require('@/assets/images/down/down.png')
+              }
+              style={showRoomSelector ? styles.upIcon : styles.downIcon}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.iconButton}>
@@ -103,9 +121,9 @@ export default function HomeScreen() {
             rooms={rooms}
             selectedRoom={selectedRoom}
             selectorLayout={selectorLayout}
-            onSelectRoom={(room) => {
-              setSelectedRoom(room);
-              setShowRoomSelector(false);
+            onSelectRoom={room => {
+              setSelectedRoom(room)
+              setShowRoomSelector(false)
             }}
             onClose={() => setShowRoomSelector(false)}
           />
@@ -117,7 +135,7 @@ export default function HomeScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.grid}>
-            {devices.map((device) => (
+            {devices.map(device => (
               <DeviceCard
                 key={device.id}
                 device={device}
@@ -128,11 +146,12 @@ export default function HomeScreen() {
         </ScrollView>
       </View>
     </ImageBackground>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(15, 23, 42, 0.75)',
@@ -160,23 +179,53 @@ const styles = StyleSheet.create({
     tintColor: '#ffffff',
   },
 
+  downIcon: {
+    width: 18,
+    height: 18,
+    marginRight: 14,
+    tintColor: '#ffffff',
+  },
+
+  upIcon: {
+    width: 18,
+    height: 18,
+    marginRight: 14,
+    tintColor: '#484848',
+  },
+
   roomSelector: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(30, 41, 59, 0.85)',
-    paddingHorizontal: 14,
+    backgroundColor: 'transparent',
     paddingVertical: 12,
-    borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    width: '70%',
+    borderColor: '#E6E6E6',
+    width: 220,
+  },
+
+  roomSelectorSelected: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+        borderWidth: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    width: 220,
   },
 
   roomText: {
     fontSize: 16,
-    color: '#fff',
+    color: '#ffffff',
     fontFamily: 'Manrope_400Regular',
+    marginLeft: 45,
+  },
+
+  roomTextSelected: {
+    fontSize: 16,
+    color: '#737373',
+    marginLeft: 12,
   },
 
   content: {
@@ -188,4 +237,4 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 16,
   },
-});
+})

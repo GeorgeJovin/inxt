@@ -10,9 +10,9 @@ import { useRouter } from 'expo-router';
 export default function OnboardingScreen() {
   const router = useRouter();
 
-  const handleGetStarted = () => {
-    router.push('/home');
-  };
+  // const handleGetStarted = () => {
+  //   router.push('/home');
+  // };
 
   const handleSignIn = () => {
     router.push('/home');
@@ -37,24 +37,23 @@ export default function OnboardingScreen() {
             <Text style={styles.subtitle}>
               Control all your smart devices{'\n'}and enjoy your life
             </Text>
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
+          </View>
+          <View style={styles.buttonContainer}>
+            {/* <TouchableOpacity
                 style={[styles.button, styles.primaryButton]}
                 onPress={handleGetStarted}
                 activeOpacity={0.8}
               >
                 <Text style={styles.primaryButtonText}>Get started</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
-              <TouchableOpacity
-                style={[styles.button, styles.secondaryButton]}
-                onPress={handleSignIn}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.secondaryButtonText}>Sign In</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={[styles.button, styles.secondaryButton]}
+              onPress={handleSignIn}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.secondaryButtonText}>Sign In</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -86,14 +85,12 @@ const styles = StyleSheet.create({
     letterSpacing: 6,
   },
   bottomContent: {
-    paddingHorizontal: 32,
-    paddingBottom: 60,
+    marginBottom: 130,
   },
   title: {
     fontSize: 32,
     fontFamily: 'Manrope_700Bold',
     color: '#ffffff',
-
     textAlign: 'center',
   },
   subtitle: {
@@ -101,11 +98,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Manrope_400Regular',
     color: '#ffffff',
     lineHeight: 24,
-    marginBottom: 32,
     textAlign: 'center',
   },
   buttonContainer: {
-    gap: 16,
+    marginBottom: 60,
+    marginHorizontal:32,
   },
   button: {
     paddingVertical: 16,
@@ -116,7 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#6EBEFF',
   },
   secondaryButton: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#E5F3FF',
   },
   primaryButtonText: {
     fontSize: 16,

@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   cardOff: {
-    backgroundColor: 'rgba(30, 41, 59, 0.9)',
+    backgroundColor: '#1B252D',
   },
   header: {
     flexDirection: 'row',
@@ -123,18 +123,18 @@ const styles = StyleSheet.create({
   },
 
   toggleTrack: {
-    width: 44,
-    height: 24,
-    borderRadius: 12,
+    width: 45,
+    height: 20,
+    borderRadius: 24,
     justifyContent: 'center',
     paddingHorizontal: 2,
   },
   toggleTrackOn: {
-    backgroundColor: '#93C5FD',
+    backgroundColor: 'rgba(110,190,255,0.2)',
     alignItems: 'flex-end',
   },
   toggleTrackOff: {
-    backgroundColor: '#475569',
+    backgroundColor: '#2C3A46',
     alignItems: 'flex-start',
   },
   toggleThumb: {
@@ -143,10 +143,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   toggleThumbOn: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#6EBEFF',
   },
   toggleThumbOff: {
-    backgroundColor: '#1E293B',
+    backgroundColor: '#ffffff',
   },
   iconContainer: {
     alignItems: 'center',
