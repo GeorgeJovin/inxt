@@ -17,7 +17,11 @@ interface DeviceCardProps {
 
 export function DeviceCard({ device, onToggle }: DeviceCardProps) {
   const getIcon = () => {
-    const iconProps = { size: 40, color: device.isOn ? '#1E293B' : '#ffffff', strokeWidth: 1.5 };
+    const iconProps = {
+      size: 40,
+      color: device.isOn ? '#1E293B' : '#ffffff',
+      strokeWidth: 1.5,
+    };
 
     switch (device.type) {
       case 'climate':
@@ -34,15 +38,14 @@ export function DeviceCard({ device, onToggle }: DeviceCardProps) {
   };
 
   return (
-    <View style={[
-      styles.card,
-      device.isOn ? styles.cardOn : styles.cardOff
-    ]}>
+    <View style={[styles.card, device.isOn ? styles.cardOn : styles.cardOff]}>
       <View style={styles.header}>
-        <Text style={[
-          styles.status,
-          device.isOn ? styles.statusOn : styles.statusOff
-        ]}>
+        <Text
+          style={[
+            styles.status,
+            device.isOn ? styles.statusOn : styles.statusOff,
+          ]}
+        >
           {device.isOn ? 'ON' : 'OFF'}
         </Text>
         <TouchableOpacity
@@ -50,34 +53,34 @@ export function DeviceCard({ device, onToggle }: DeviceCardProps) {
           onPress={onToggle}
           activeOpacity={0.7}
         >
-          <View style={[
-            styles.toggleTrack,
-            device.isOn ? styles.toggleTrackOn : styles.toggleTrackOff
-          ]}>
-            <View style={[
-              styles.toggleThumb,
-              device.isOn ? styles.toggleThumbOn : styles.toggleThumbOff
-            ]} />
+          <View
+            style={[
+              styles.toggleTrack,
+              device.isOn ? styles.toggleTrackOn : styles.toggleTrackOff,
+            ]}
+          >
+            <View
+              style={[
+                styles.toggleThumb,
+                device.isOn ? styles.toggleThumbOn : styles.toggleThumbOff,
+              ]}
+            />
           </View>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.iconContainer}>
-        {getIcon()}
-      </View>
+      <View style={styles.iconContainer}>{getIcon()}</View>
 
       <View style={styles.footer}>
-        <Text style={[
-          styles.name,
-          device.isOn ? styles.textOn : styles.textOff
-        ]}>
+        <Text
+          style={[styles.name, device.isOn ? styles.textOn : styles.textOff]}
+        >
           {device.name}
         </Text>
         {device.value ? (
-          <Text style={[
-            styles.value,
-            device.isOn ? styles.textOn : styles.textOff
-          ]}>
+          <Text
+            style={[styles.value, device.isOn ? styles.textOn : styles.textOff]}
+          >
             {device.value}
           </Text>
         ) : null}
@@ -106,8 +109,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   status: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontFamily: 'Manrope_700Bold',
+    fontSize: 16,
   },
   statusOn: {
     color: '#1E293B',
@@ -118,6 +121,7 @@ const styles = StyleSheet.create({
   toggle: {
     padding: 4,
   },
+
   toggleTrack: {
     width: 44,
     height: 24,
@@ -150,15 +154,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-    gap: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   name: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 10,
+    fontFamily: 'Manrope_500Medium',
   },
   value: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontFamily: 'Manrope_600SemiBold',
+    fontSize: 16,
   },
   textOn: {
     color: '#1E293B',

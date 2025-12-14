@@ -75,7 +75,7 @@ export default function HomeScreen() {
         <View style={styles.header}>
           <TouchableOpacity style={styles.iconButton}>
             <Image
-              source={require('@/assets/images/back.png')}
+              source={require('@/assets/images/back/back.png')}
               style={styles.icon}
             />
           </TouchableOpacity>
@@ -91,7 +91,7 @@ export default function HomeScreen() {
 
           <TouchableOpacity style={styles.iconButton}>
             <Image
-              source={require('@/assets/images/power.png')}
+              source={require('@/assets/images/power/power.png')}
               style={styles.icon}
             />
           </TouchableOpacity>
@@ -155,9 +155,9 @@ const styles = StyleSheet.create({
   },
 
   icon: {
-    width: 22,
-    height: 22,
-    tintColor: '#fff',
+    width: 24,
+    height: 24,
+    tintColor: '#ffffff',
   },
 
   roomSelector: {
