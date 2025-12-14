@@ -7,19 +7,24 @@ import {
   ScrollView,
   Image,
   LayoutRectangle,
-} from 'react-native'
-import { useState } from 'react'
-import { DeviceCard } from '@/components/DeviceCard'
-import { RoomSelector } from '@/components/RoomSelector'
-import { Device } from '@/components/types/types'
+} from 'react-native';
+import { useState } from 'react';
+import { DeviceCard } from '@/components/DeviceCard';
+import { RoomSelector } from '@/components/RoomSelector';
+import { Device } from '@/components/types/types';
+import { useDisableBack } from '@/hooks/useDisableBack';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
-  const [selectedRoom, setSelectedRoom] = useState('Living Room')
-  const [showRoomSelector, setShowRoomSelector] = useState(false)
-  const [selectorLayout, setSelectorLayout] =
-    useState<LayoutRectangle | null>(null)
+  const [selectedRoom, setSelectedRoom] = useState('Living Room');
+  const [showRoomSelector, setShowRoomSelector] = useState(false);
+  const router = useRouter();
+  const [selectorLayout, setSelectorLayout] = useState<LayoutRectangle | null>(
+    null
+  );
+  useDisableBack();
 
-  const rooms = ['Living Room', 'Bed Room', 'Kids Room', 'Kitchen']
+  const rooms = ['Living Room', 'Bed Room', 'Kids Room', 'Kitchen'];
 
   const [devices, setDevices] = useState<Device[]>([
     {
@@ -54,13 +59,13 @@ export default function HomeScreen() {
       isOn: false,
       type: 'lamp',
     },
-  ])
+  ]);
 
   const toggleDevice = (id: string) => {
-    setDevices(prev =>
-      prev.map(d => (d.id === id ? { ...d, isOn: !d.isOn } : d)),
-    )
-  }
+    setDevices((prev) =>
+      prev.map((d) => (d.id === id ? { ...d, isOn: !d.isOn } : d))
+    );
+  };
 
   return (
     <ImageBackground
@@ -85,8 +90,8 @@ export default function HomeScreen() {
                 ? styles.roomSelectorSelected
                 : styles.roomSelector
             }
-            onPress={() => setShowRoomSelector(prev => !prev)}
-            onLayout={e => setSelectorLayout(e.nativeEvent.layout)}
+            onPress={() => setShowRoomSelector((prev) => !prev)}
+            onLayout={(e) => setSelectorLayout(e.nativeEvent.layout)}
             activeOpacity={0.8}
           >
             <Text
@@ -107,7 +112,10 @@ export default function HomeScreen() {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => router.replace('/onboarding')}
+          >
             <Image
               source={require('@/assets/images/power/power.png')}
               style={styles.icon}
@@ -121,9 +129,9 @@ export default function HomeScreen() {
             rooms={rooms}
             selectedRoom={selectedRoom}
             selectorLayout={selectorLayout}
-            onSelectRoom={room => {
-              setSelectedRoom(room)
-              setShowRoomSelector(false)
+            onSelectRoom={(room) => {
+              setSelectedRoom(room);
+              setShowRoomSelector(false);
             }}
             onClose={() => setShowRoomSelector(false)}
           />
@@ -135,7 +143,7 @@ export default function HomeScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.grid}>
-            {devices.map(device => (
+            {devices.map((device) => (
               <DeviceCard
                 key={device.id}
                 device={device}
@@ -146,7 +154,7 @@ export default function HomeScreen() {
         </ScrollView>
       </View>
     </ImageBackground>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -209,7 +217,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#FFFFFF',
-        borderWidth: 1,
+    borderWidth: 1,
     paddingVertical: 12,
     borderRadius: 8,
     width: 220,
@@ -237,4 +245,4 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 16,
   },
-})
+});

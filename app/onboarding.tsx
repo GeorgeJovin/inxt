@@ -6,58 +6,61 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { LoginModal } from '@/components/LoginModal';
+import { useDisableBack } from '@/hooks/useDisableBack';
 
 export default function OnboardingScreen() {
   const router = useRouter();
+    useDisableBack();
+  const [showLogin, setShowLogin] = useState(false);
 
-  // const handleGetStarted = () => {
-  //   router.push('/home');
-  // };
-
-  const handleSignIn = () => {
+  const handleLoginSuccess = () => {
+    setShowLogin(false);
     router.push('/home');
   };
 
   return (
-    <ImageBackground
-      source={{
-        uri: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      }}
-      style={styles.container}
-      resizeMode="cover"
-    >
-      <View style={styles.overlay}>
-        <View style={styles.content}>
-          <View style={styles.header}>
-            <Text style={styles.logo}>INXT</Text>
-          </View>
+    <>
+      <ImageBackground
+        source={{
+          uri: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        }}
+        style={styles.container}
+        resizeMode="cover"
+      >
+        <View style={styles.overlay}>
+          <View style={styles.content}>
+            <View style={styles.header}>
+              <Text style={styles.logo}>INXT</Text>
+            </View>
 
-          <View style={styles.bottomContent}>
-            <Text style={styles.title}>Control your home</Text>
-            <Text style={styles.subtitle}>
-              Control all your smart devices{'\n'}and enjoy your life
-            </Text>
-          </View>
-          <View style={styles.buttonContainer}>
-            {/* <TouchableOpacity
-                style={[styles.button, styles.primaryButton]}
-                onPress={handleGetStarted}
+            <View style={styles.bottomContent}>
+              <Text style={styles.title}>Control your home</Text>
+              <Text style={styles.subtitle}>
+                Control all your smart devices{'\n'}and enjoy your life
+              </Text>
+            </View>
+
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={[styles.button, styles.secondaryButton]}
+                onPress={() => setShowLogin(true)}
                 activeOpacity={0.8}
               >
-                <Text style={styles.primaryButtonText}>Get started</Text>
-              </TouchableOpacity> */}
-
-            <TouchableOpacity
-              style={[styles.button, styles.secondaryButton]}
-              onPress={handleSignIn}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.secondaryButtonText}>Sign In</Text>
-            </TouchableOpacity>
+                <Text style={styles.secondaryButtonText}>Sign In</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+
+      <LoginModal
+        visible={showLogin}
+        onClose={() => setShowLogin(false)}
+        onSuccess={handleLoginSuccess}
+      />
+    </>
   );
 }
 
