@@ -15,7 +15,9 @@ export default function WelcomeScreen() {
 
   return (
     <ImageBackground
-      source={{ uri: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200' }}
+      source={{
+        uri: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200',
+      }}
       style={styles.container}
       resizeMode="cover"
     >
@@ -46,8 +48,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    fontSize: 72,
-    fontWeight: '800',
+    fontSize: 96,
+    fontFamily: 'Manrope_700Bold',
     color: '#ffffff',
     letterSpacing: 8,
     marginBottom: 200,
@@ -56,14 +58,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   welcomeText: {
-    fontSize: 28,
-    fontWeight: '600',
+    fontSize: 32,
+    fontFamily: 'Manrope_700Bold',
     color: '#ffffff',
     marginBottom: 4,
   },
   tagline: {
     fontSize: 16,
-    fontWeight: '400',
+    fontFamily: 'Manrope_400Regular',
     color: '#ffffff',
     letterSpacing: 0.5,
   },

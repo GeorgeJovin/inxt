@@ -1,20 +1,28 @@
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 
 export default function OnboardingScreen() {
   const router = useRouter();
 
   const handleGetStarted = () => {
-    router.push('/(tabs)');
+    router.push('/home');
   };
 
   const handleSignIn = () => {
-    router.push('/(tabs)');
+    router.push('/home');
   };
 
   return (
     <ImageBackground
-      source={{ uri: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200' }}
+      source={{
+        uri: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200',
+      }}
       style={styles.container}
       resizeMode="cover"
     >
@@ -67,12 +75,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   header: {
-    paddingTop: 120,
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   logo: {
-    fontSize: 64,
-    fontWeight: '800',
+    fontSize: 96,
+    fontFamily: 'Manrope_700Bold',
     color: '#ffffff',
     letterSpacing: 6,
   },
@@ -82,39 +91,41 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontWeight: '700',
+    fontFamily: 'Manrope_700Bold',
     color: '#ffffff',
-    marginBottom: 12,
+
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    fontWeight: '400',
+    fontFamily: 'Manrope_400Regular',
     color: '#ffffff',
     lineHeight: 24,
     marginBottom: 32,
+    textAlign: 'center',
   },
   buttonContainer: {
     gap: 16,
   },
   button: {
-    paddingVertical: 18,
-    borderRadius: 12,
+    paddingVertical: 16,
+    borderRadius: 16,
     alignItems: 'center',
   },
   primaryButton: {
-    backgroundColor: '#93C5FD',
+    backgroundColor: '#6EBEFF',
   },
   secondaryButton: {
     backgroundColor: '#ffffff',
   },
   primaryButtonText: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#1E293B',
+    fontSize: 16,
+    fontFamily: 'Manrope_400Regular',
+    color: '#171717',
   },
   secondaryButtonText: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#1E293B',
+    fontSize: 16,
+    fontFamily: 'Manrope_400Regular',
+    color: '#171717',
   },
 });
