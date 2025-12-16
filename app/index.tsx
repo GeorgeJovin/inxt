@@ -11,7 +11,7 @@ export default function WelcomeScreen() {
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [router]);
 
   return (
     <ImageBackground

@@ -1,3 +1,5 @@
+import { loginUser } from '@/store/actions/auth.actions';
+import { useAppDispatch } from '@/store/hooks';
 import React, { useState } from 'react';
 import {
   Modal,
@@ -24,9 +26,16 @@ export const LoginModal = ({
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const dispatch = useAppDispatch();
 
   const handleLogin = () => {
     if (username === 'admin' && password === 'admin@123') {
+      dispatch(
+        loginUser({
+          email: username,
+          password,
+        })
+      );
       setError('');
       setUsername('');
       setPassword('');

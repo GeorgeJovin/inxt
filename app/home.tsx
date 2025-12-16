@@ -11,7 +11,7 @@ import {
 import { useState } from 'react';
 import { DeviceCard } from '@/components/DeviceCard';
 import { RoomSelector } from '@/components/RoomSelector';
-import { Device } from '@/components/types/types';
+import { Device } from '@/types/components.types';
 import { useDisableBack } from '@/hooks/useDisableBack';
 import { useRouter } from 'expo-router';
 

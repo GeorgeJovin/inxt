@@ -9,6 +9,8 @@ import {
   Manrope_700Bold,
   Manrope_800ExtraBold,
 } from '@expo-google-fonts/manrope';
+import { Provider } from 'react-redux';
+import { store } from '@/store';
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -23,13 +25,13 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <>
+    <Provider store={store}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="onboarding" />
         <Stack.Screen name="home" />
       </Stack>
       <StatusBar style="light" />
-    </>
+    </Provider>
   );
 }
