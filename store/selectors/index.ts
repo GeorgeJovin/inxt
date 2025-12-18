@@ -1,5 +1,10 @@
 import { RootState } from '../index'
 
-export const selectAuthUser = (state: RootState) => state.auth.user
-export const selectAuthLoading = (state: RootState) => state.auth.loading
-export const selectAuthError = (state: RootState) => state.auth.error
+export const selectAuth = (state: RootState) => ({
+  user: state.auth.user,
+  loading: state.auth.loading,
+  error: state.auth.error,
+})
+export const selectRooms = (state: RootState) => state.customer.rooms
+export const selectDevices = (state: RootState) =>
+  state.device.devices

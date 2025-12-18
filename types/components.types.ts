@@ -6,3 +6,4 @@ export type Device = {
   isOn: boolean;
   type: string;
 };
+

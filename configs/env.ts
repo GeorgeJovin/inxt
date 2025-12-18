@@ -2,10 +2,12 @@ import Constants from 'expo-constants'
 
 type ExtraConfig = {
   API_BASE_URL: string
+  API_KEY:string
 }
 
 const extra = Constants.expoConfig?.extra as ExtraConfig
 
 export const ENV = {
   API_BASE_URL: extra.API_BASE_URL,
+  API_KEY:extra.API_KEY
 }

@@ -1,6 +1,4 @@
-import { loginUser } from '@/store/actions/auth.actions';
-import { useAppDispatch } from '@/store/hooks';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal,
   Text,
@@ -11,6 +9,12 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+
+import { loginUser } from '@/store/actions/auth.actions';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import Toast from './Toast';
+import { selectAuth } from '@/store/selectors';
+import { clearAuthError } from '@/store/slices/auth.slice';
 
 type LoginModalProps = {
   visible: boolean;
@@ -23,27 +27,37 @@ export const LoginModal = ({
   onClose,
   onSuccess,
 }: LoginModalProps) => {
+  const dispatch = useAppDispatch();
+  const { user, loading, error } = useAppSelector(selectAuth);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const dispatch = useAppDispatch();
+  const [toast, setToast] = useState<{
+    message: string;
+    type: 'error' | 'success';
+  } | null>(null);
 
   const handleLogin = () => {
-    if (username === 'admin' && password === 'admin@123') {
-      dispatch(
-        loginUser({
-          email: username,
-          password,
-        })
-      );
-      setError('');
+    dispatch(
+      loginUser({
+        username,
+        password,
+      })
+    );
+  };
+  useEffect(() => {
+    if (error) {
+      setToast({ message: error, type: 'error' });
+      dispatch(clearAuthError());
+    }
+  }, [dispatch, error]);
+
+  useEffect(() => {
+    if (user) {
       setUsername('');
       setPassword('');
       onSuccess();
-    } else {
-      setError('Invalid username or password');
     }
-  };
+  }, [onSuccess, user]);
 
   return (
     <Modal
@@ -59,7 +73,9 @@ export const LoginModal = ({
       >
         <Pressable style={styles.backdrop} onPress={onClose}>
           <Pressable style={styles.container}>
-            <Text style={styles.title}>Sign In</Text>
+            {/* Heading */}
+            <Text style={styles.title}>Welcome back</Text>
+            <Text style={styles.subtitle}>Sign in to continue</Text>
 
             <TextInput
               placeholder="Username"
@@ -67,6 +83,7 @@ export const LoginModal = ({
               value={username}
               onChangeText={setUsername}
               style={styles.input}
+              editable={!loading}
             />
 
             <TextInput
@@ -76,70 +93,75 @@ export const LoginModal = ({
               value={password}
               onChangeText={setPassword}
               style={styles.input}
+              editable={!loading}
             />
 
-            {error ? <Text style={styles.error}>{error}</Text> : null}
-
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-              <Text style={styles.buttonText}>Login</Text>
+            <TouchableOpacity
+              style={[styles.button, loading && { opacity: 0.6 }]}
+              onPress={handleLogin}
+              disabled={loading}
+            >
+              <Text style={styles.buttonText}>
+                {loading ? 'Signing in...' : 'Sign in'}
+              </Text>
             </TouchableOpacity>
           </Pressable>
         </Pressable>
+
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onHide={() => setToast(null)}
+          />
+        )}
       </KeyboardAvoidingView>
     </Modal>
   );
 };
-
 const styles = StyleSheet.create({
-  flex: {
-    flex: 1,
-  },
+  flex: { flex: 1 },
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0,0,0,0.45)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   container: {
     width: '88%',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fff',
     padding: 24,
-    borderRadius: 20,
-    elevation: 8, // Android shadow
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
+    borderRadius: 24,
+    elevation: 10,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontFamily: 'Manrope_700Bold',
     textAlign: 'center',
-    marginBottom: 24,
     color: '#111827',
+  },
+  subtitle: {
+    fontSize: 14,
+    fontFamily: 'Manrope_400Regular',
+    textAlign: 'center',
+    color: '#6B7280',
+    marginBottom: 24,
+    marginTop: 4,
   },
   input: {
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    borderRadius: 12,
+    borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,
     marginBottom: 16,
-    fontFamily: 'Manrope_400Regular',
     fontSize: 16,
     color: '#111827',
-  },
-  error: {
-    color: '#EF4444',
-    fontSize: 14,
-    marginBottom: 12,
-    textAlign: 'center',
-    fontFamily: 'Manrope_400Regular',
   },
   button: {
     backgroundColor: '#6EBEFF',
     paddingVertical: 16,
-    borderRadius: 16,
+    borderRadius: 18,
     alignItems: 'center',
     marginTop: 8,
   },

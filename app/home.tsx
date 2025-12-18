@@ -7,65 +7,68 @@ import {
   ScrollView,
   Image,
   LayoutRectangle,
-} from 'react-native';
-import { useState } from 'react';
-import { DeviceCard } from '@/components/DeviceCard';
-import { RoomSelector } from '@/components/RoomSelector';
-import { Device } from '@/types/components.types';
-import { useDisableBack } from '@/hooks/useDisableBack';
-import { useRouter } from 'expo-router';
+} from 'react-native'
+import { useEffect, useRef, useState } from 'react'
+import { Feather } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
+
+import { DeviceCard } from '@/components/DeviceCard'
+import { RoomSelector } from '@/components/RoomSelector'
+import { useDisableBack } from '@/hooks/useDisableBack'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { selectAuth, selectDevices, selectRooms } from '@/store/selectors'
+import { fetchCustomerDetails } from '@/store/actions/customer.actions'
+import { fetchDevices } from '@/store/actions/device.action'
+import { toggleMqttDevice } from '@/store/actions/mqtt.action'
+import { logoutUser } from '@/store/actions/auth.actions'
 
 export default function HomeScreen() {
-  const [selectedRoom, setSelectedRoom] = useState('Living Room');
-  const [showRoomSelector, setShowRoomSelector] = useState(false);
-  const router = useRouter();
-  const [selectorLayout, setSelectorLayout] = useState<LayoutRectangle | null>(
-    null
-  );
-  useDisableBack();
+  useDisableBack()
 
-  const rooms = ['Living Room', 'Bed Room', 'Kids Room', 'Kitchen'];
+  const router = useRouter()
+  const dispatch = useAppDispatch()
 
-  const [devices, setDevices] = useState<Device[]>([
-    {
-      id: '1',
-      name: 'Climate',
-      value: '24°C',
-      icon: 'thermometer',
-      isOn: false,
-      type: 'climate',
-    },
-    {
-      id: '2',
-      name: 'Air conditioner',
-      value: '26.6°C',
-      icon: 'air-vent',
-      isOn: true,
-      type: 'ac',
-    },
-    {
-      id: '3',
-      name: 'Fan',
-      value: '',
-      icon: 'fan',
-      isOn: true,
-      type: 'fan',
-    },
-    {
-      id: '4',
-      name: 'Desk lamp',
-      value: '',
-      icon: 'lamp',
-      isOn: false,
-      type: 'lamp',
-    },
-  ]);
+  const { user } = useAppSelector(selectAuth)
+  const rooms = useAppSelector(selectRooms)
+  const devices = useAppSelector(selectDevices)
 
-  const toggleDevice = (id: string) => {
-    setDevices((prev) =>
-      prev.map((d) => (d.id === id ? { ...d, isOn: !d.isOn } : d))
-    );
-  };
+  const selectorRef = useRef<View>(null)
+
+  const [showRoomSelector, setShowRoomSelector] = useState(false)
+  const [selectorLayout, setSelectorLayout] =
+    useState<LayoutRectangle | null>(null)
+
+  const [selectedRoom, setSelectedRoom] = useState('')
+  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null)
+
+  /* 1️⃣ Fetch rooms */
+  useEffect(() => {
+    if (user?.customerId) {
+      dispatch(fetchCustomerDetails(user.customerId))
+    }
+  }, [dispatch, user?.customerId])
+
+  /* 2️⃣ Auto-select first room */
+  useEffect(() => {
+    if (rooms.length > 0 && !selectedRoomId) {
+      setSelectedRoom(rooms[0].plist_name)
+      setSelectedRoomId(rooms[0].list_id)
+    }
+  }, [rooms, selectedRoomId])
+
+  /* 3️⃣ Fetch devices when room changes */
+  useEffect(() => {
+    if (user?.customerId && selectedRoomId) {
+      dispatch(fetchDevices(user.customerId, selectedRoomId))
+    }
+  }, [dispatch, selectedRoomId, user?.customerId])
+
+  const toggleRoomSelector = () => {
+    selectorRef.current?.measureInWindow((x, y, width, height) => {
+      setSelectorLayout({ x, y, width, height })
+      setShowRoomSelector(prev => !prev)
+    })
+  }
 
   return (
     <ImageBackground
@@ -74,68 +77,56 @@ export default function HomeScreen() {
       }}
       style={styles.container}
     >
+      {/* MAIN OVERLAY */}
       <View style={styles.overlay}>
         {/* HEADER */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.iconButton}>
-            <Image
-              source={require('@/assets/images/back/back.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
+          {/* CENTERED ROOM SELECTOR */}
+          <View style={styles.headerCenter}>
+            <View ref={selectorRef} collapsable={false}>
+              <TouchableOpacity
+                style={
+                  showRoomSelector
+                    ? styles.roomSelectorSelected
+                    : styles.roomSelector
+                }
+                onPress={toggleRoomSelector}
+                activeOpacity={0.85}
+              >
+                <Text
+                  style={
+                    showRoomSelector
+                      ? styles.roomTextSelected
+                      : styles.roomText
+                  }
+                >
+                  {selectedRoom || 'Select Room'}
+                </Text>
 
+                <Image
+                  source={
+                    showRoomSelector
+                      ? require('@/assets/images/up/up.png')
+                      : require('@/assets/images/down/down.png')
+                  }
+                  style={showRoomSelector ? styles.upIcon : styles.downIcon}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* POWER BUTTON */}
           <TouchableOpacity
-            style={
-              showRoomSelector
-                ? styles.roomSelectorSelected
-                : styles.roomSelector
-            }
-            onPress={() => setShowRoomSelector((prev) => !prev)}
-            onLayout={(e) => setSelectorLayout(e.nativeEvent.layout)}
-            activeOpacity={0.8}
+            style={styles.powerButton}
+            onPress={() => {
+              if (!user) return
+              dispatch(logoutUser(user.customerId))
+              router.replace('/onboarding')
+            }}
           >
-            <Text
-              style={
-                showRoomSelector ? styles.roomTextSelected : styles.roomText
-              }
-            >
-              {selectedRoom}
-            </Text>
-
-            <Image
-              source={
-                showRoomSelector
-                  ? require('@/assets/images/up/up.png')
-                  : require('@/assets/images/down/down.png')
-              }
-              style={showRoomSelector ? styles.upIcon : styles.downIcon}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.iconButton}
-            onPress={() => router.replace('/onboarding')}
-          >
-            <Image
-              source={require('@/assets/images/power/power.png')}
-              style={styles.icon}
-            />
+            <Feather name="power" size={24} color="#fff" />
           </TouchableOpacity>
         </View>
-
-        {/* DROPDOWN */}
-        {showRoomSelector && selectorLayout && (
-          <RoomSelector
-            rooms={rooms}
-            selectedRoom={selectedRoom}
-            selectorLayout={selectorLayout}
-            onSelectRoom={(room) => {
-              setSelectedRoom(room);
-              setShowRoomSelector(false);
-            }}
-            onClose={() => setShowRoomSelector(false)}
-          />
-        )}
 
         {/* CONTENT */}
         <ScrollView
@@ -143,18 +134,53 @@ export default function HomeScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.grid}>
-            {devices.map((device) => (
+            {devices.map(device => (
               <DeviceCard
-                key={device.id}
-                device={device}
-                onToggle={() => toggleDevice(device.id)}
+                key={device.device_id}
+                device={{
+                  id: String(device.device_id),
+                  name: device.device_name,
+                  value: device.device_speed_temp,
+                  icon: device.device_type,
+                  isOn: device.device_status === 'ON',
+                  type: device.device_type,
+                }}
+                onToggle={() => {
+                  if (!user || !selectedRoomId) return
+                  dispatch(
+                    toggleMqttDevice({
+                      customerId: user.customerId,
+                      listId: selectedRoomId,
+                      deviceId: device.device_id,
+                      currentStatus: device.device_status,
+                    }),
+                  )
+                }}
               />
             ))}
           </View>
         </ScrollView>
       </View>
+
+      {/* FLOATING DROPDOWN */}
+      {showRoomSelector && selectorLayout && (
+        <RoomSelector
+          rooms={rooms.map(r => r.plist_name)}
+          selectedRoom={selectedRoom}
+          selectorLayout={selectorLayout}
+          onSelectRoom={roomName => {
+            const room = rooms.find(r => r.plist_name === roomName)
+            if (room) {
+              setSelectedRoom(room.plist_name)
+              setSelectedRoomId(room.list_id)
+            }
+            setShowRoomSelector(false)
+          }}
+          onClose={() => setShowRoomSelector(false)}
+        />
+      )}
     </ImageBackground>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -165,26 +191,61 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(15, 23, 42, 0.75)',
   },
 
+  /* HEADER */
   header: {
-    flexDirection: 'row',
+    height: 80,
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingTop: 40,
     paddingBottom: 20,
   },
 
-  iconButton: {
-    width: 40,
-    height: 40,
+  headerCenter: {
     justifyContent: 'center',
     alignItems: 'center',
   },
 
-  icon: {
-    width: 24,
-    height: 24,
-    tintColor: '#ffffff',
+  powerButton: {
+    position: 'absolute',
+    right: 20,
+    height: 40,
+    width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  /* ROOM SELECTOR */
+  roomSelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: '#E6E6E6',
+    paddingVertical: 12,
+    width: 220,
+  },
+
+  roomSelectorSelected: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 12,
+    width: 220,
+  },
+
+  roomText: {
+    fontSize: 16,
+    color: '#ffffff',
+    marginLeft: 45,
+  },
+
+  roomTextSelected: {
+    fontSize: 16,
+    color: '#737373',
+    marginLeft: 12,
   },
 
   downIcon: {
@@ -201,41 +262,7 @@ const styles = StyleSheet.create({
     tintColor: '#484848',
   },
 
-  roomSelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: 'transparent',
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: '#E6E6E6',
-    width: 220,
-  },
-
-  roomSelectorSelected: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-    width: 220,
-  },
-
-  roomText: {
-    fontSize: 16,
-    color: '#ffffff',
-    fontFamily: 'Manrope_400Regular',
-    marginLeft: 45,
-  },
-
-  roomTextSelected: {
-    fontSize: 16,
-    color: '#737373',
-    marginLeft: 12,
-  },
-
+  /* CONTENT */
   content: {
     padding: 20,
   },
@@ -245,4 +272,4 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 16,
   },
-});
+})

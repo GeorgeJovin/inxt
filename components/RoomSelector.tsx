@@ -36,9 +36,7 @@ export function RoomSelector({
 
   return (
     <Pressable style={styles.backdrop} onPress={onClose}>
-      {/* Prevent closing when tapping inside */}
       <Pressable
-        onPress={() => {}}
         style={[
           styles.dropdown,
           {
@@ -47,11 +45,12 @@ export function RoomSelector({
             width: selectorLayout.width,
           },
         ]}
+        onPress={() => {}}
       >
         {/* SEARCH */}
         <View style={styles.searchContainer}>
           <TextInput
-            placeholder="Find an item"
+            placeholder="Find a room"
             placeholderTextColor="#737373"
             value={query}
             onChangeText={setQuery}
@@ -70,7 +69,6 @@ export function RoomSelector({
                 onSelectRoom(room)
                 onClose()
               }}
-              activeOpacity={0.7}
             >
               <Text style={styles.roomText}>{room}</Text>
             </TouchableOpacity>
@@ -87,7 +85,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: 1000,
+    zIndex: 999,
   },
 
   dropdown: {
