@@ -8,6 +8,7 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
+  View,
 } from 'react-native';
 
 import { loginUser } from '@/store/actions/auth.actions';
@@ -15,6 +16,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import Toast from './Toast';
 import { selectAuth } from '@/store/selectors';
 import { clearAuthError } from '@/store/slices/auth.slice';
+import { Feather } from '@expo/vector-icons';
 
 type LoginModalProps = {
   visible: boolean;
@@ -29,6 +31,7 @@ export const LoginModal = ({
 }: LoginModalProps) => {
   const dispatch = useAppDispatch();
   const { user, loading, error } = useAppSelector(selectAuth);
+  const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [toast, setToast] = useState<{
@@ -86,15 +89,30 @@ export const LoginModal = ({
               editable={!loading}
             />
 
-            <TextInput
-              placeholder="Password"
-              placeholderTextColor="#9CA3AF"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-              style={styles.input}
-              editable={!loading}
-            />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                placeholder="Password"
+                placeholderTextColor="#9CA3AF"
+                secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={setPassword}
+                style={styles.passwordInput}
+                editable={!loading}
+              />
+
+              <TouchableOpacity
+                onPress={() => setShowPassword((prev) => !prev)}
+                disabled={loading}
+                style={styles.eyeIcon}
+                hitSlop={10}
+              >
+                <Feather
+                  name={showPassword ? 'eye' : 'eye-off'}
+                  size={20}
+                  color="#6B7280"
+                />
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity
               style={[styles.button, loading && { opacity: 0.6 }]}
@@ -169,5 +187,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Manrope_600SemiBold',
     color: '#111827',
+  },
+  passwordContainer: {
+    position: 'relative',
+    marginBottom: 16,
+  },
+
+  passwordInput: {
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    paddingRight: 48, // space for eye icon
+    fontSize: 16,
+    color: '#111827',
+  },
+
+  eyeIcon: {
+    position: 'absolute',
+    right: 16,
+    top: '50%',
+    transform: [{ translateY: -10 }],
   },
 });

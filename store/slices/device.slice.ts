@@ -25,6 +25,12 @@ const deviceSlice = createSlice({
     clearDevices(state) {
       state.devices = []
     },
+    mqttToggleStart(state) {
+    state.loading = true
+    },
+    mqttToggleEnd(state) {
+    state.loading = false
+    },
     updateDeviceStatus(
       state,
       action: PayloadAction<{
@@ -49,6 +55,8 @@ export const {
   fetchDevicesFailure,
   clearDevices,
   updateDeviceStatus,
+  mqttToggleStart,
+  mqttToggleEnd,
 } = deviceSlice.actions
 
 export default deviceSlice.reducer

@@ -1,6 +1,10 @@
 import { AppDispatch } from '@/store'
 import { mqttDeviceApi } from '@/api/mqtt.api'
-import { updateDeviceStatus } from '../slices/device.slice'
+import {
+  updateDeviceStatus,
+  mqttToggleStart,
+  mqttToggleEnd,
+} from '../slices/device.slice'
 
 export const toggleMqttDevice =
   (params: {
@@ -11,6 +15,7 @@ export const toggleMqttDevice =
   }) =>
   async (dispatch: AppDispatch) => {
     try {
+       dispatch(mqttToggleStart())
       const nextStatus = params.currentStatus === 'ON' ? 'OFF' : 'ON'
 
       const response = await mqttDeviceApi({
@@ -28,5 +33,6 @@ export const toggleMqttDevice =
       )
     } catch (error) {
       console.error('MQTT toggle failed', error)
+       dispatch(mqttToggleEnd())
     }
   }

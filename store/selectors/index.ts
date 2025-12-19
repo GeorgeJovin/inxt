@@ -8,3 +8,7 @@ export const selectAuth = (state: RootState) => ({
 export const selectRooms = (state: RootState) => state.customer.rooms
 export const selectDevices = (state: RootState) =>
   state.device.devices
+export const selectGlobalLoading = (state: RootState) =>
+  state.device.loading ||
+  state.customer.loading ||
+  state.auth.loading
