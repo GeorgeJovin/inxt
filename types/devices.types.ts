@@ -1,7 +1,7 @@
 export interface DeviceApiResponse {
   msg: string
   device_details: {
-    device_id: number
+    device_id: string
     device_name: string
     device_type: string
     device_status: 'ON' | 'OFF'
@@ -10,10 +10,10 @@ export interface DeviceApiResponse {
 }
 
 export interface Device {
-  device_id: number
+  device_id: string
   device_name: string
   device_type: string
-  device_status: 'ON' | 'OFF'
+  device_status: 'ON' | 'OFF' | 'On' | 'Off'
   device_speed_temp: string
 }
 

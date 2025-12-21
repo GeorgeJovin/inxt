@@ -5,14 +5,14 @@ import { DeviceApiResponse } from '@/types/devices.types'
 
 export const fetchDevicesApi = async (
   customerId: string,
-  listId: number
+  listId: string
 ): Promise<DeviceApiResponse> => {
   const response = await api.post<DeviceApiResponse>(
     ENDPOINTS.DEVICE_LIST,
     {
       api_key: ENV.API_KEY,
       customer_id: customerId,
-      list_id: listId,
+      category_id: listId,
     }
   )
 

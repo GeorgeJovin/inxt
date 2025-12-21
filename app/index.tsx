@@ -3,10 +3,14 @@ import { useAppSelector } from '@/store/hooks'
 import { selectAuth } from '@/store/selectors'
 
 export default function Index() {
-  const { user } = useAppSelector(selectAuth)
+  const { user, hasSeenWelcome } = useAppSelector(selectAuth)
+
+  if (!hasSeenWelcome) {
+    return <Redirect href="/welcome" />
+  }
 
   if (!user) {
-    return <Redirect href="/welcome" />
+    return <Redirect href="/onboarding" />
   }
 
   return <Redirect href="/home" />

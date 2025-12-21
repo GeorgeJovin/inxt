@@ -30,8 +30,8 @@ export function RoomSelector({
 }: RoomSelectorProps) {
   const [query, setQuery] = useState('')
 
-  const filteredRooms = rooms.filter(room =>
-    room.toLowerCase().includes(query.toLowerCase()),
+  const filteredRooms = rooms?.filter(room =>
+    room?.toLowerCase()?.includes(query?.toLowerCase()),
   )
 
   return (

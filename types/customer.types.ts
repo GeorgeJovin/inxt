@@ -1,6 +1,6 @@
 export interface Room {
-  list_id: number
-  plist_name: string
+  category_id: string
+  category_name: string
 }
 
 export interface CustomerDetailsResponse {

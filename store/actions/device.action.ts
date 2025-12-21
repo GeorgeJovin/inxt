@@ -7,7 +7,7 @@ import {
 } from '../slices/device.slice'
 
 export const fetchDevices =
-  (customerId: string, listId: number) =>
+  (customerId: string, listId: string) =>
   async (dispatch: AppDispatch) => {
     try {
       dispatch(fetchDevicesStart())

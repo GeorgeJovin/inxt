@@ -1,3 +1,4 @@
+import { extractNumber } from '@/components/helper'
 import { Device, DeviceState } from '@/types/devices.types'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
@@ -39,7 +40,7 @@ const deviceSlice = createSlice({
       }>
     ) {
       const device = state.devices.find(
-        (d) => d.device_id === action.payload.deviceId
+        (d) => extractNumber(d.device_id) === action.payload.deviceId
       )
 
       if (device) {

@@ -1,17 +1,21 @@
 import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
+import { useAppDispatch } from '@/store/hooks';
+import { markWelcomeSeen } from '@/store/slices/auth.slice';
 
 export default function WelcomeScreen() {
   const router = useRouter();
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     const timer = setTimeout(() => {
+        dispatch(markWelcomeSeen())
       router.push('/onboarding');
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, [router]);
+  }, [dispatch, router]);
 
   return (
     <ImageBackground

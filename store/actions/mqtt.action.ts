@@ -15,7 +15,7 @@ export const toggleMqttDevice =
   }) =>
   async (dispatch: AppDispatch) => {
     try {
-       dispatch(mqttToggleStart())
+      dispatch(mqttToggleStart())
       const nextStatus = params.currentStatus === 'ON' ? 'OFF' : 'ON'
 
       const response = await mqttDeviceApi({
@@ -33,6 +33,7 @@ export const toggleMqttDevice =
       )
     } catch (error) {
       console.error('MQTT toggle failed', error)
-       dispatch(mqttToggleEnd())
+    }finally {
+     dispatch(mqttToggleEnd())
     }
   }

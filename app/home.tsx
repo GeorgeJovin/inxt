@@ -27,6 +27,7 @@ import { fetchDevices } from '@/store/actions/device.action';
 import { toggleMqttDevice } from '@/store/actions/mqtt.action';
 import { logoutUser } from '@/store/actions/auth.actions';
 import Loader from '@/components/Loader';
+import { extractNumber } from '@/components/helper';
 
 export default function HomeScreen() {
   useDisableBack();
@@ -45,7 +46,7 @@ export default function HomeScreen() {
   );
 
   const [selectedRoom, setSelectedRoom] = useState('');
-  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
   /* 1️⃣ Fetch rooms */
   useEffect(() => {
@@ -57,8 +58,8 @@ export default function HomeScreen() {
   /* 2️⃣ Auto-select first room */
   useEffect(() => {
     if (rooms.length > 0 && !selectedRoomId) {
-      setSelectedRoom(rooms[0].plist_name);
-      setSelectedRoomId(rooms[0].list_id);
+      setSelectedRoom(rooms[0].category_name);
+      setSelectedRoomId(rooms[0].category_id);
     }
   }, [rooms, selectedRoomId]);
 
@@ -81,6 +82,7 @@ export default function HomeScreen() {
       setShowRoomSelector((prev) => !prev);
     });
   };
+
 
   return (
     <>
@@ -152,7 +154,7 @@ export default function HomeScreen() {
                     name: device.device_name,
                     value: device.device_speed_temp,
                     icon: device.device_type,
-                    isOn: device.device_status === 'ON',
+                    isOn: device.device_status === 'ON' || device.device_status === 'On' ,
                     type: device.device_type,
                   }}
                   onToggle={() => {
@@ -160,9 +162,9 @@ export default function HomeScreen() {
                     dispatch(
                       toggleMqttDevice({
                         customerId: user.customerId,
-                        listId: selectedRoomId,
-                        deviceId: device.device_id,
-                        currentStatus: device.device_status,
+                        listId: extractNumber(selectedRoomId),
+                        deviceId: extractNumber(device?.device_id),
+                        currentStatus: device.device_status === "ON" || device.device_status === "On" ? 'ON' : "OFF",
                       })
                     );
                   }}
@@ -175,14 +177,14 @@ export default function HomeScreen() {
         {/* FLOATING DROPDOWN */}
         {showRoomSelector && selectorLayout && (
           <RoomSelector
-            rooms={rooms.map((r) => r.plist_name)}
+            rooms={rooms.map((r) => r.category_name)}
             selectedRoom={selectedRoom}
             selectorLayout={selectorLayout}
             onSelectRoom={(roomName) => {
-              const room = rooms.find((r) => r.plist_name === roomName);
+              const room = rooms.find((r) => r.category_name === roomName);
               if (room) {
-                setSelectedRoom(room.plist_name);
-                setSelectedRoomId(room.list_id);
+                setSelectedRoom(room.category_name);
+                setSelectedRoomId(room.category_id);
               }
               setShowRoomSelector(false);
             }}
