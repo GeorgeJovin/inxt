@@ -76,13 +76,18 @@ export default function HomeScreen() {
     }
   }, [router, user]);
 
-  const toggleRoomSelector = () => {
-    selectorRef.current?.measureInWindow((x, y, width, height) => {
-      setSelectorLayout({ x, y, width, height });
-      setShowRoomSelector((prev) => !prev);
+const toggleRoomSelector = () => {
+  selectorRef.current?.measureInWindow((x, y, width, height) => {
+    setSelectorLayout({
+      x,
+      y: y + 30,
+      width,
+      height,
     });
-  };
 
+    setShowRoomSelector((prev) => !prev);
+  });
+};
 
   return (
     <>
@@ -109,9 +114,7 @@ export default function HomeScreen() {
               >
                 <Text
                   style={
-                      showRoomSelector
-                        ? styles.roomTextSelected
-                        : styles.roomText
+                    showRoomSelector ? styles.roomTextSelected : styles.roomText
                   }
                 >
                   {selectedRoom || 'Select Room'}
@@ -154,7 +157,9 @@ export default function HomeScreen() {
                     name: device.device_name,
                     value: device.device_speed_temp,
                     icon: device.device_type,
-                    isOn: device.device_status === 'ON' || device.device_status === 'On' ,
+                    isOn:
+                      device.device_status === 'ON' ||
+                      device.device_status === 'On',
                     type: device.device_type,
                   }}
                   onToggle={() => {
@@ -164,7 +169,11 @@ export default function HomeScreen() {
                         customerId: user.customerId,
                         listId: extractNumber(selectedRoomId),
                         deviceId: extractNumber(device?.device_id),
-                        currentStatus: device.device_status === "ON" || device.device_status === "On" ? 'ON' : "OFF",
+                        currentStatus:
+                          device.device_status === 'ON' ||
+                          device.device_status === 'On'
+                            ? 'ON'
+                            : 'OFF',
                       })
                     );
                   }}
@@ -206,17 +215,15 @@ const styles = StyleSheet.create({
 
   /* HEADER */
   header: {
-    height: 80,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    paddingTop: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 60,
     paddingBottom: 20,
     paddingHorizontal: 20,
   },
 
   powerButton: {
-    position: 'absolute',
-    right: 20,
     height: 40,
     width: 40,
     justifyContent: 'center',
