@@ -95,38 +95,35 @@ export default function HomeScreen() {
         <View style={styles.overlay}>
           {/* HEADER */}
           <View style={styles.header}>
-            {/* CENTERED ROOM SELECTOR */}
-            <View style={styles.headerCenter}>
-              <View ref={selectorRef} collapsable={false}>
-                <TouchableOpacity
+            <View ref={selectorRef} collapsable={false}>
+              <TouchableOpacity
+                style={
+                  showRoomSelector
+                    ? styles.roomSelectorSelected
+                    : styles.roomSelector
+                }
+                onPress={toggleRoomSelector}
+                activeOpacity={0.85}
+              >
+                <Text
                   style={
-                    showRoomSelector
-                      ? styles.roomSelectorSelected
-                      : styles.roomSelector
-                  }
-                  onPress={toggleRoomSelector}
-                  activeOpacity={0.85}
-                >
-                  <Text
-                    style={
                       showRoomSelector
                         ? styles.roomTextSelected
                         : styles.roomText
-                    }
-                  >
-                    {selectedRoom || 'Select Room'}
-                  </Text>
+                  }
+                >
+                  {selectedRoom || 'Select Room'}
+                </Text>
 
-                  <Image
-                    source={
-                      showRoomSelector
-                        ? require('@/assets/images/up/up.png')
-                        : require('@/assets/images/down/down.png')
-                    }
-                    style={showRoomSelector ? styles.upIcon : styles.downIcon}
-                  />
-                </TouchableOpacity>
-              </View>
+                <Image
+                  source={
+                    showRoomSelector
+                      ? require('@/assets/images/up/up.png')
+                      : require('@/assets/images/down/down.png')
+                  }
+                  style={showRoomSelector ? styles.upIcon : styles.downIcon}
+                />
+              </TouchableOpacity>
             </View>
 
             {/* POWER BUTTON */}
@@ -209,14 +206,10 @@ const styles = StyleSheet.create({
   header: {
     height: 80,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     paddingTop: 40,
     paddingBottom: 20,
-  },
-
-  headerCenter: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal: 20,
   },
 
   powerButton: {
@@ -236,7 +229,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E6E6E6',
     paddingVertical: 12,
-    width: 220,
+    width: 280,
   },
 
   roomSelectorSelected: {
@@ -247,13 +240,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingVertical: 12,
-    width: 220,
+    width: 280,
   },
 
   roomText: {
     fontSize: 16,
     color: '#ffffff',
-    marginLeft: 45,
+    marginLeft: 12,
   },
 
   roomTextSelected: {

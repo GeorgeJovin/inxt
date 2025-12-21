@@ -110,11 +110,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#111827',
     paddingVertical: 6,
+    marginLeft: 4,
   },
 
   roomItem: {
     paddingVertical: 14,
-    paddingHorizontal: 12,
+    paddingHorizontal: 4,
   },
 
   roomText: {
