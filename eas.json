@@ -5,14 +5,26 @@
   },
   "build": {
     "development": {
+      "distribution": "internal",
       "developmentClient": true,
-      "distribution": "internal"
+      "env": {
+        "API_BASE_URL": "http://65.1.122.201",
+        "API_KEY": "APIKEY-MOB-123"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "API_BASE_URL": "http://65.1.122.201",
+        "API_KEY": "APIKEY-MOB-123"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+       "env": {
+        "API_BASE_URL": "http://65.1.122.201",
+        "API_KEY": "APIKEY-MOB-123"
+      }
     }
   },
   "submit": {

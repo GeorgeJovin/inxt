@@ -31,7 +31,8 @@
     },
     "android": {
       "package": "com.swathika.inxt",
-      "permissions": ["ACCESS_FINE_LOCATION"]
+     "permissions": ["ACCESS_FINE_LOCATION", "INTERNET"],
+      "usesCleartextTraffic": true
     }
   }
 }
